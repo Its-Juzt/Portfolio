@@ -80,7 +80,12 @@ async function loadIdleExpressions(){
     const image = `${image_pattern}${i}${suffix}.png`;
     const exists = await checkImage(image);
     if (!exists) break;
-    expressions.push(`http://${window.location.host}/img${image}`);
+    if (window.location.host.includes('github')) {
+        expressions.push(`http://${window.location.host}/Portfolio/img${image}`);
+        console.log(`http://${window.location.host}/Portfolio/img${image}`);
+    } else {
+        expressions.push(`http://${window.location.host}/img${image}`);
+    }
     i++;
   }
 
