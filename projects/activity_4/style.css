@@ -1,0 +1,12 @@
+body, button {
+background-color: pink;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+}
+
+.dark-mode {
+background-color: black;
+color: pink;
+}
