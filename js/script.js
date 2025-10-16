@@ -44,7 +44,12 @@ function modifyPath(path) {
 }
 
 function checkImage(imagePath) {
-  const hostUrl = `http://${window.location.host}/img`
+  let hostUrl;
+  if (window.location.host.includes('github')) {
+    hostUrl = `http://${window.location.host}/Portfolio/img`;
+  } else {
+    hostUrl = `http://${window.location.host}/img`;
+  }
   return new Promise(resolve => {
     const img = new Image();
     img.onload = () => resolve(true);
@@ -62,7 +67,13 @@ async function loadHappyExpressions(){
     const image = `${image_pattern}${i}${suffix}.png`;
     const exists = await checkImage(image);
     if (!exists) break;
-    expressions.push(`http://${window.location.host}/img${image}`);
+      
+    if (window.location.host.includes('github')) {
+        expressions.push(`http://${window.location.host}/Portfolio/img${image}`);
+        console.log(`http://${window.location.host}/Portfolio/img${image}`);
+    } else {
+        expressions.push(`http://${window.location.host}/img${image}`);
+    }
     i++;
   }
 
