@@ -1,0 +1,706 @@
+:root {
+    --light-primary: #0fd8e6;
+    --light-secondary: #00b4e0;
+    --light-primary-rgb: 255, 105, 180;
+    --light-secondary-rgb: 255, 20, 147;
+    --dark-primary: #00b4e0;
+    --dark-secondary: #0fd8e6;
+    --dark-primary-rgb: 255, 20, 147;
+    --dark-secondary-rgb: 255, 105, 180;
+    --current-primary: var(--light-primary);
+    --current-secondary: var(--light-secondary);
+    --current-primary-rgb: var(--light-primary-rgb);
+    --current-secondary-rgb: var(--light-secondary-rgb);
+}
+
+body {
+    /* Disable text highlighting. */
+    user-select: none;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;    
+
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background-color: #fff; /* Pink background fallback */  /* Note: Change to a color matching your images if needed */
+    /* Remove these two lines—they'll be set dynamically via JS for high-res support */
+    /* background-size: cover; */
+    /* background-position: center; */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-image 0.5s ease-in-out, background-color 0.5s;
+    color: #000;
+
+    /* Additions for perfect fit and high-res */
+    background-repeat: no-repeat;  /* Prevents tiling */
+    background-attachment: fixed;  /* Keeps image fixed during scroll (if any subtle scroll occurs) */
+    /* High-res support: image-set() will auto-pick based on device pixel ratio (1x for standard, 2x for retina/4K) */
+    /* You'll set the actual image via JS below */
+}
+
+body.dark-mode {
+    --current-primary: var(--dark-primary);
+    --current-secondary: var(--dark-secondary);
+    --current-primary-rgb: var(--dark-primary-rgb);
+    --current-secondary-rgb: var(--dark-secondary-rgb);
+    background-color: #333;
+    color: #fff;
+}
+
+#vn-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#character {
+    position: absolute;
+    bottom: 23%; /* Adjusted to be just above textbox */
+    right: 0%; /* Positioned on the right side */
+    z-index: 1;
+    transition: opacity 0.5s ease-in-out;
+    transform: translateY(0);
+}
+
+#character img {
+    height: 500px; /* Set your desired fixed height (e.g., 400px) */
+    width: 400px; /* Set your desired fixed width (e.g., 300px) */
+    object-fit: contain; /* Resizes the image to fit within the fixed dimensions while preserving aspect ratio */
+    animation: float 3s ease-in-out infinite; /* Keep existing animation if needed */
+    filter: brightness(1.05) contrast(1.05) saturate(1.2);
+    transition: filter 0.5s ease;
+}
+
+#intro-modal {
+  color: #000;
+  font-family: Consolas, Arial , Monospace, Terminus;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+
+.intro-content {
+  background: var(--light-primary);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  opacity: 0.95;
+}
+
+#modal-img {
+  width: 200px;
+  margin-bottom: 15px;
+}
+
+#intro-modal p {
+  font-size: 1.1em;
+  margin-bottom: 20px;
+}
+
+#modal-enter {
+  background: var(--light-secondary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+#textbox {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.8);
+    border-top: 5px solid var(--current-primary);
+    border-radius: 15px; /* Added radius */
+    padding: 20px;
+    box-sizing: border-box;
+    height: 30%;
+    overflow-y: auto;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1); /* Floating effect */
+    transition: opacity 0.5s ease, transform 0.5s ease, background 0.5s;
+    z-index: 3; /* Ensure textbox is above side-box */
+}
+
+body.dark-mode #textbox {
+    background: rgba(0, 0, 0, 0.8);
+    border-top: 5px solid var(--current-primary);
+}
+
+#name {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: var(--current-secondary);
+}
+
+body.dark-mode #name {
+    color: var(--current-secondary);
+}
+
+#subtitle {
+    font-style: italic;
+    font-size: 1em;
+    color: var(--current-primary);
+    margin-top: 5px;
+}
+
+body.dark-mode #subtitle {
+    color: var(--current-primary);
+}
+
+#text {
+    margin-top: 10px;
+    margin-bottom: 15px; /* Add space below text for choices */
+}
+
+#choices {
+    margin-top: 10px; /* Reduced top margin for tighter layout */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Grid for better arrangement: auto-fit columns, min 140px width */
+    margin-right: 33px;
+    gap: 8px; /* Consistent gap between choices */
+    align-items: center;
+    justify-content: center;
+}
+
+.choice {
+    background: var(--current-primary);
+    color: white;
+    padding: 8px 12px; /* Slightly smaller padding for compact fit */
+    margin: 0; /* Remove individual margins, use grid gap instead */
+    cursor: pointer;
+    border-radius: 8px; /* Slightly larger radius for softer look */
+    text-align: center;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    font-size: 0.9em; /* Slightly smaller font for more choices */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Handle long text gracefully */
+}
+
+.choice:hover {
+    background: var(--current-secondary);
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(var(--current-primary-rgb), 0.3); /* Add subtle glow on hover */
+}
+
+body.dark-mode .choice {
+    background: var(--current-primary);
+}
+
+body.dark-mode .choice:hover {
+    background: var(--current-secondary);
+    box-shadow: 0 2px 8px rgba(var(--current-primary-rgb), 0.3);
+}
+
+#back-btn, #skip-btn {
+    position: absolute;
+    bottom: 10px;
+    padding: 10px 15px;
+    background: var(--current-primary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    z-index: 4; /* Ensure buttons are above everything */
+}
+
+body.dark-mode #back-btn, body.dark-mode #skip-btn {
+    background: var(--current-primary);
+}
+
+#back-btn:hover, #skip-btn:hover {
+    background: var(--current-secondary);
+}
+
+body.dark-mode #back-btn:hover, body.dark-mode #skip-btn:hover {
+    background: var(--current-secondary);
+}
+
+#back-btn {
+    left: 20px;
+}
+
+#skip-btn {
+    right: 20px;
+}
+
+#side-box {
+    position: absolute;
+    bottom:33%;
+    left: 0%;
+    width: 40%;
+    height: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 20px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+body.dark-mode #side-box {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Intro content grid for largeContent sections */
+#intro-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.intro-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+    border-left: 4px solid var(--current-primary);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.intro-card:nth-child(1) { animation-delay: 0.1s; }
+.intro-card:nth-child(2) { animation-delay: 0.2s; }
+.intro-card:nth-child(3) { animation-delay: 0.3s; }
+.intro-card:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.intro-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 5px 20px rgba(var(--current-primary-rgb), 0.3);
+}
+
+body.dark-mode .intro-card {
+    background: rgba(0, 0, 0, 0.7);
+    border-left: 4px solid var(--current-primary);
+}
+
+body.dark-mode #clock {
+    color: var(--current-primary);
+}
+
+#clock {
+    color: #666;
+}
+
+#character.dark-mode img{
+    filter: brightness(0.7) contrast(1.1) saturate(0.9) hue-rotate(-10deg);
+}
+
+.intro-card h4 {
+    margin: 0 0 8px 0;
+    color: var(--current-secondary);
+    font-size: 1.1em;
+}
+
+body.dark-mode .intro-card h4 {
+    color: var(--current-secondary);
+}
+
+.intro-card p {
+    margin: 0 0 10px 0;
+    color: #666;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+body.dark-mode .intro-card p {
+    color: #ccc;
+}
+
+.intro-card .intro-icon {
+    font-size: 2em;
+    color: var(--current-primary);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+body.dark-mode .intro-card .intro-icon {
+    color: var(--current-primary);
+}
+
+#play-controls {
+    display: flex;
+    justify-content: flex-start; /* Align left for scrolling consistency */
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    overflow-x: auto; /* Enable horizontal scrolling for this container only */
+    overflow-y: hidden; /* Prevent vertical scrolling */
+    white-space: nowrap; /* Keep items in a single row */
+    padding: 10px 15px; /* Padding for touch area and aesthetics */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    scrollbar-width: thin; /* Firefox: slim scrollbar */
+    scrollbar-color: #888 #f0f0f0; /* Firefox: scrollbar colors */
+}
+
+play-controls::-webkit-scrollbar {
+    height: 8px; /* Slim horizontal scrollbar */
+}
+#play-controls::-webkit-scrollbar-track {
+    background: #f0f0f0; /* Track color */
+}
+#play-controls::-webkit-scrollbar-thumb {
+    background: #888; /* Thumb color */
+    border-radius: 4px;
+}
+
+/* Enhanced Responsiveness for Small Screens */
+@media (max-width: 768px) {
+    #character {
+        bottom: 20%; /* Adjust for mobile */
+        right: 0%; /* Keep on right but closer */
+    }
+
+    #character img {
+        max-height: 40vh;
+    }
+    #play-controls {
+        justify-content: flex-start; /* Align left for scrolling */
+        padding: 10px 15px; /* Extra padding for touch */
+    
+    }
+
+    #textbox {
+        height: 40%;
+        padding: 10px;
+        margin-bottom: 80px;
+        border-radius: 10px;
+        left: 10px;
+        right: 10px;
+    }
+
+    #choices {
+        grid-template-columns: 1fr; /* Single column on mobile for full width */
+        gap: 6px;
+    }
+
+    .choice {
+        width: 100%;
+        padding: 12px 16px; /* Larger padding on mobile for touch */
+        font-size: 1em; /* Normal font on mobile */
+    }
+
+    #back-btn, #skip-btn {
+        padding: 5px 8px;
+        font-size: 0.9em;
+    }
+
+    #side-box {
+        left: 10px !important;
+        /* right: 20px !important; */
+        width: 88% !important;
+        height: 50% !important; /* Override JS for better fit */
+        bottom: 10% !important; /* Adjust to avoid overlap */
+    }
+
+    #intro-content {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .intro-card {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    #character {
+        bottom: 53%;
+        right: 0; /* Adjust for smaller screens */
+    }
+
+    #textbox {
+        height: 50%;
+        left: 10px;
+        right: 10px;
+    }
+
+    #side-box {
+        width: 88% !important;
+        margin-top: 5px;
+        height: 35% !important; /* Smaller height to prevent overlap */
+        top: 10px !important;
+        bottom: 5% !important;
+       /* right: 5 !important;*/
+        left: 10 !important;
+        padding: 10px;
+    }
+}
+
+@media (max-height: 700px) {
+    #side-box {
+        margin-top: 5px;
+        height: 35% !important; /* Even smaller for very short screens */
+        top: 2px !important;
+    }
+
+    #textbox {
+        height: 45% !important; /* Slightly smaller textbox on very short screens */
+    }
+}
+
+
+.repos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.repo-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-left: 4px solid var(--current-primary);
+}
+
+.repo-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+body.dark-mode .repo-card {
+    background: rgba(0, 0, 0, 0.7);
+    border-left: 4px solid var(--current-primary);
+}
+
+.repo-card h4 {
+    margin: 0 0 8px 0;
+    color: var(--current-secondary);
+    font-size: 1.1em;
+}
+
+body.dark-mode .repo-card h4 {
+    color: var(--current-secondary);
+}
+
+.repo-card p {
+    margin: 0 0 10px 0;
+    color: #666;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+body.dark-mode .repo-card p {
+    color: #ccc;
+}
+
+.repo-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.repo-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+    color: #888;
+}
+
+body.dark-mode .repo-meta {
+    color: #aaa;
+}
+
+.language {
+    font-weight: bold;
+}
+
+.stars {
+    color: #ffd700;
+}
+
+/* Responsive for repos */
+@media (max-width: 768px) {
+    .repos-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .repo-card {
+        padding: 12px;
+    }
+}
+
+/* Updated/Added to your styles.css for social links with per-card icons */
+
+.social-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.social-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid var(--current-primary);
+    display: block;
+}
+
+.social-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(var(--current-primary-rgb), 0.3);
+}
+
+body.dark-mode .social-card {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid var(--current-primary);
+}
+
+.social-icon {
+    margin-bottom: 8px;
+}
+
+.social-icon img {
+    width: 40px; /* Adjust icon size as needed */
+    height: 40px;
+    border-radius: 50%; /* Circular icons for consistency */
+    display: block;
+    margin: 0 auto;
+    transition: filter 0.2s ease;
+}
+
+.social-card:hover .social-icon img {
+    filter: brightness(1.1); /* Slight glow on hover */
+}
+
+.social-card h4 {
+    margin: 0 0 5px 0;
+    color: var(--current-secondary);
+    font-size: 1.1em;
+}
+
+.social-card p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+body.dark-mode .social-card h4 {
+    color: var(--current-secondary);
+}
+
+body.dark-mode .social-card p {
+    color: #ccc;
+}
+
+/* Platform-specific border colors */
+.github { border-color: #333333; }
+.linkedin { border-color: #0077b5; }
+.twitter { border-color: #1da1f2; }
+
+/* Responsive for social links */
+@media (max-width: 768px) {
+    .social-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .social-card {
+        padding: 12px;
+    }
+
+    .social-icon img {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+/* Custom Scrollbar for Modern Look */
+::-webkit-scrollbar {
+    width: 8px; /* Width for vertical scrollbar */
+    height: 8px; /* Height for horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1); /* Subtle track */
+    border-radius: 10px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3); /* Darker track in dark mode */
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--current-primary), var(--current-secondary)); /* Pink gradient for thumb */
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--current-secondary), var(--current-primary)); /* Hover effect */
+    transform: scale(1.1);
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--current-primary), var(--current-secondary)); /* Adjusted gradient for dark mode */
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--current-secondary), var(--current-primary));
+}
+
+/* For Firefox (use scrollbar-width and scrollbar-color) */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--current-primary) rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode * {
+    scrollbar-color: var(--current-primary) rgba(0, 0, 0, 0.3);
+}

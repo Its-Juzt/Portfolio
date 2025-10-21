@@ -1,0 +1,16 @@
+* body {
+background-color: #fff;
+color: #000;
+font-family: "Arial";
+}
+
+.dark-mode {
+background-color: #000;
+color:#fff;
+}
+
+.section h1, p {
+display: flex;
+align-items: center;
+justify-content: center;
+}

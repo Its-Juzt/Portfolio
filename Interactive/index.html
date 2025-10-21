@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juster's Portfolio - Mini Visual Novel Style</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="icon" href="./img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+    <div id="vn-container">
+        <div id="character" style="opacity: 0;">
+            <img>
+        </div>
+        <div id="textbox" style="opacity: 0;">
+            <div id="name">Menhera-chan</div>
+            <div id="subtitle"></div>
+            <div id="text"></div>
+            <div id="choices"></div>
+            <button id="back-btn" style="display: none;">Back</button>
+            <button id="skip-btn" style="display: none;">Skip</button>
+        </div>
+        <div id="side-box"></div>
+    </div>
+
+    <div id="intro-modal">
+      <div class="intro-content">
+        <img id="modal-img" src="./img/Menhera/smiling3.png" alt="Character">
+        <p>Welcome to my portfolio!</p>
+        <button id="modal-enter">Enter</button>
+      </div>
+    </div> 
+
+
+    <script src="js/script.js" ></script>
+</body>
+</html>

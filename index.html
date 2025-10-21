@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juster's Portfolio - Choose Mode</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="popup-overlay">
+        <div class="popup-container">
+            <h1>Welcome to Juster's Portfolio</h1>
+            <p>Choose your viewing mode:</p>
+            <div class="mode-buttons">
+                <button class="mode-btn interactive" onclick="chooseMode('interactive')">
+                    <i class="fas fa-gamepad"></i>
+                    <h3>Interactive Mode</h3>
+                    <p>Visual novel style with animations, choices, and guided storytelling.</p>
+                </button>
+                <button class="mode-btn normal" onclick="chooseMode('normal')">
+                    <i class="fas fa-book-open"></i>
+                    <h3>Normal Mode</h3>
+                    <p>Static, scrollable layout with all content at a glance—no interactions.</p>
+                </button>
+            </div>
+            <p class="note">You can switch modes anytime from the settings in Interactive Mode.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
