@@ -5,7 +5,7 @@ let isPlayMode = false;
 let currentPlayIndex = 0;
 let autoplayEnabled = true;
 let idleEnabled = true;
-let darkMode = true;
+let darkMode = false;
 let musicEnabled = true;
 let soundEnabled = true;
 let menheraChanEnabled = true;
@@ -49,7 +49,7 @@ function checkImage(imagePath) {
   if (window.location.host.includes('github')) {
     hostUrl = `http://${window.location.host}/Portfolio/Interactive/img`;
   } else {
-    hostUrl = `http://${window.location.host}/Interactive/img`;
+    hostUrl = `http://${window.location.host}/Interactive/img/`;
   }
   return new Promise(resolve => {
     const img = new Image();
@@ -68,9 +68,10 @@ async function loadHappyExpressions(){
     const image = `${image_pattern}${i}${suffix}.png`;
     const exists = await checkImage(image);
     if (!exists) break;
-    console.log(window.location.host);
+      
     if (window.location.host.includes('github')) {
         expressions.push(`http://${window.location.host}/Portfolio/Interactive/img${image}`);
+        console.log(`http://${window.location.host}/Portfolio/img${image}`);
     } else {
         expressions.push(`http://${window.location.host}/Interactive/img${image}`);
     }
@@ -81,9 +82,7 @@ async function loadHappyExpressions(){
   return expressions;
 }
 
-
 async function loadIdleExpressions(){
-  console.log(window.location.host);
   const suffix = menheraChanEnabled ? '' : '_kun';
   const image_pattern = `/Menhera/idle/idle`;
   let i = 0;
@@ -97,7 +96,7 @@ async function loadIdleExpressions(){
       
     if (window.location.host.includes('github')) {
         expressions.push(`http://${window.location.host}/Portfolio/Interactive/img${image}`);
-        console.log(`http://${window.location.host}/Interactive/img${image}`);
+        console.log(`http://${window.location.host}/Portfolio/img${image}`);
     } else {
         expressions.push(`http://${window.location.host}/Interactive/img${image}`);
     }
@@ -445,6 +444,11 @@ function togglePause() {
 }
 
 
+function iSwitcher() {
+    window.location.href = "/";
+}
+
+
 function updateScene(sectionKey) {
     const key = sectionKey.toLowerCase().replace(/ /g, '_');
     const section = sections[key];
@@ -743,6 +747,11 @@ function updateScene(sectionKey) {
                     };
 
                     document.getElementById('reset-btn').onclick = (e) => {
+                        playClickSound();
+                        iSwitcher();
+                    };
+
+                    document.getElementById('interactive-switch-btn').onclick = (e) => {
                         playClickSound();
                         resetColors();
                     };
