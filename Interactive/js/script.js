@@ -445,7 +445,7 @@ function togglePause() {
 
 
 function iSwitcher() {
-    window.location.href = "/";
+    window.location.href = "/Portfolio";
 }
 
 
@@ -748,12 +748,12 @@ function updateScene(sectionKey) {
 
                     document.getElementById('reset-btn').onclick = (e) => {
                         playClickSound();
-                        iSwitcher();
+                        resetColors();
                     };
 
                     document.getElementById('interactive-switch-btn').onclick = (e) => {
                         playClickSound();
-                        resetColors();
+                        iSwitcher();
                     };
 
                     document.getElementById('music-toggle').onchange = (e) => {
