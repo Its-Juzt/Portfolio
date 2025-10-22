@@ -5,7 +5,7 @@ let isPlayMode = false;
 let currentPlayIndex = 0;
 let autoplayEnabled = true;
 let idleEnabled = true;
-let darkMode = false;
+let darkMode = true;
 let musicEnabled = true;
 let soundEnabled = true;
 let menheraChanEnabled = true;
@@ -47,9 +47,9 @@ function checkImage(imagePath) {
   let hostUrl;
   console.log(window.location.host);
   if (window.location.host.includes('github')) {
-    hostUrl = `http://${window.location.host}/Portfolio/img`;
+    hostUrl = `http://${window.location.host}/Portfolio/Interactive/img`;
   } else {
-    hostUrl = `http://${window.location.host}/img`;
+    hostUrl = `http://${window.location.host}/Interactive/img`;
   }
   return new Promise(resolve => {
     const img = new Image();
@@ -70,10 +70,9 @@ async function loadHappyExpressions(){
     if (!exists) break;
     console.log(window.location.host);
     if (window.location.host.includes('github')) {
-        expressions.push(`http://${window.location.host}/Portfolio/img${image}`);
-        console.log(`http://${window.location.host}/Portfolio/img${image}`);
+        expressions.push(`http://${window.location.host}/Portfolio/Interactive/img${image}`);
     } else {
-        expressions.push(`http://${window.location.host}/img${image}`);
+        expressions.push(`http://${window.location.host}/Interactive/img${image}`);
     }
     i++;
   }
@@ -97,10 +96,10 @@ async function loadIdleExpressions(){
     console.log(`host is http://${window.location.host}`);
       
     if (window.location.host.includes('github')) {
-        expressions.push(`http://${window.location.host}/Portfolio/img${image}`);
-        console.log(`http://${window.location.host}/Portfolio/img${image}`);
+        expressions.push(`http://${window.location.host}/Portfolio/Interactive/img${image}`);
+        console.log(`http://${window.location.host}/Interactive/img${image}`);
     } else {
-        expressions.push(`http://${window.location.host}/img${image}`);
+        expressions.push(`http://${window.location.host}/Interactive/img${image}`);
     }
     i++;
   }
