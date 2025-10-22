@@ -45,6 +45,7 @@ function modifyPath(path) {
 
 function checkImage(imagePath) {
   let hostUrl;
+  console.log(window.location.host);
   if (window.location.host.includes('github')) {
     hostUrl = `http://${window.location.host}/Portfolio/img`;
   } else {
@@ -67,7 +68,7 @@ async function loadHappyExpressions(){
     const image = `${image_pattern}${i}${suffix}.png`;
     const exists = await checkImage(image);
     if (!exists) break;
-      
+    console.log(window.location.host);
     if (window.location.host.includes('github')) {
         expressions.push(`http://${window.location.host}/Portfolio/img${image}`);
         console.log(`http://${window.location.host}/Portfolio/img${image}`);
@@ -83,6 +84,7 @@ async function loadHappyExpressions(){
 
 
 async function loadIdleExpressions(){
+  console.log(window.location.host);
   const suffix = menheraChanEnabled ? '' : '_kun';
   const image_pattern = `/Menhera/idle/idle`;
   let i = 0;
