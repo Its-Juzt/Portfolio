@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSSC Boarding House - Payments</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="student-common.css">
+    <link rel="stylesheet" type="text/css" href="css/payment.css">
+    <script src="js/jquery-3.6.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="jquery-3.6.1.min.js"><\/script>');</script>
+</head>
+<body>
+    <!-- Payment Container -->
+    <div id="paymentContainer">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-left">
+                <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
+                <h1><i class="fas fa-money-check-alt" aria-hidden="true"></i> <span id="page-title">Payments</span></h1>
+            </div>
+            <div class="header-right">
+                <div class="admin-profile" tabindex="0">
+                    <img id="student-profile-img" src="https://ui-avatars.com/api/?name=Guest&background=4361ee&color=fff" alt="Student profile picture">
+                    <span id="student-name"></span>
+                    <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Student Profile Dropdown -->
+        <div id="studentProfileDropdown" class="admin-profile-dropdown">
+            <div class="dropdown-header">
+                <img id="student-profile-img-dropdown" src="https://ui-avatars.com/api/?name=Guest&background=4361ee&color=fff" alt="Student profile picture">
+                <div class="user-info">
+                    <h4 id="student-name-dropdown"></h4>
+                    <p id="student-email-dropdown"></p>
+                    <span class="user-role">Student</span>
+                </div>
+            </div>
+            <div class="dropdown-divider"></div>
+      <a href="#" class="dropdown-item" id="view-profile-btn">
+    <i class="fas fa-user" aria-hidden="true"></i>
+    <span>View Profile</span>
+</a>
+             <a href="#" class="dropdown-item" id="dark-mode-item">
+        <i class="fas fa-moon" id="dark-mode-icon" aria-hidden="true"></i>
+        <span>Dark Mode</span>
+    </a>
+            <a href="#" class="dropdown-item" id="student-settings">
+                <i class="fas fa-cog" aria-hidden="true"></i>
+                <span>Settings</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item logout-item" id="student-logout">
+                <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+
+        <!-- Payment Body -->
+        <div class="admin-body">
+            <!-- Sidebar -->
+            <aside class="sidebar hidden">
+                <nav class="sidebar-nav">
+                    <a href="student.html" class="nav-item" data-page="dashboard">
+                        <i class="fas fa-home" aria-hidden="true"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="room.html" class="nav-item" data-page="room">
+                        <i class="fas fa-bed" aria-hidden="true"></i>
+                        <span>Rooms</span>
+                    </a>
+                    <a href="payments.html" class="nav-item active" data-page="payments">
+                        <i class="fas fa-money-check-alt" aria-hidden="true"></i>
+                        <span>Payments</span>
+                    </a>
+                    <a href="maintenance.html" class="nav-item" data-page="maintenance">
+                        <i class="fas fa-tools" aria-hidden="true"></i>
+                        <span>Maintenance</span>
+                    </a>
+                    <a href="announcements.html" class="nav-item" data-page="announcements">
+                        <i class="fas fa-bullhorn" aria-hidden="true"></i>
+                        <span>Announcements</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Payment Content -->
+            <main class="admin-content expanded" id="pageContent">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card payment-card">
+                        <div id="payment-content" class="payment-info-container"></div>
+                        <div class="booking-actions">
+                            <button id="make-payment" class="action-btn make-payment" style="display: none;" aria-label="Make a payment">Make Payment</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Payments Section -->
+                <div class="payments-section">
+                    <h2 class="section-title">Payment History</h2>
+                    <div class="payments-scroll">
+                        <table class="payments-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Room No</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payments-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Payment Modal -->
+        <div id="paymentModal" class="modal-overlay">
+            <div class="modal">
+                <h3>Make Payment</h3>
+                <p>Amount: ₱<span id="payment-amount"></span></p>
+                <div class="payment-methods">
+                    <div class="payment-method">
+                        <i class="fas fa-envelope fallback-icon" style="color: #4361ee;"></i>
+                        <span>Contact the Owner</span>
+                    </div>
+                    <div id="manual-payment-details" class="manual-payment-details">
+                        <p><strong>Payment Instructions:</strong></p>
+                        <p>Contact the owner at <a href="mailto:owner@dssc.edu.ph">owner@dssc.edu.ph</a> or call <a href="tel:+639123456789">+63 912 345 6789</a> to arrange manual payment (e.g., bank transfer or cash).</p>
+                        <p><strong>Payment Details:</strong></p>
+                        <p>Transaction ID: <span id="manual-payment-id"></span></p>
+                        <p>Room Code: <span id="manual-room-no"></span></p>
+                        <p>Amount: ₱<span id="manual-amount"></span></p>
+                        <p>Due Date: <span id="manual-due-date"></span></p>
+                        <p>Status: <span id="manual-status"></span></p>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" id="cancelPayment">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2025 DSSC Boarding House. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        try {
+            console.log('payments.js loaded');
+
+            // Initialize animation visibility
+            $('#paymentContainer').addClass('show').css({ display: 'block' });
+console.log('=== PAYMENTS PAGE LOADED ===');
+console.log('localStorage currentUser:', localStorage.getItem('currentUser'));
+
+// Initialize student data - ALWAYS get fresh data from localStorage
+const currentUser = JSON.parse(localStorage.getItem('currentUser')) || { name: 'Guest', email: 'guest@dssc.edu.ph' };
+const selectedRoom = JSON.parse(localStorage.getItem('selectedRoom'));
+
+console.log('Current user from localStorage:', currentUser);
+
+// Update UI with user data - FORCE update all avatar locations
+$('#student-name, #student-name-dropdown').text(currentUser.name);
+$('#student-email-dropdown').text(currentUser.email);
+
+// Create avatar URL with current name
+const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=4361ee&color=fff`;
+console.log('Avatar URL:', avatarUrl);
+
+// Update ALL avatar images
+$('#student-profile-img').attr('src', avatarUrl);
+$('#student-profile-img-dropdown').attr('src', avatarUrl);
+
+// Separate pending payments for untitled table
+const pendingPayments = selectedRoom ? [
+    {
+        txnId: selectedRoom.bookedDate ? `TXN-${selectedRoom.bookedDate.replace(/\s/g, '')}-001` : 'N/A',
+        roomNo: selectedRoom.roomCode || 'N/A',
+        amount: selectedRoom.price || 0,
+        paymentMadeDate: 'N/A',
+        dueDate: selectedRoom.nextDueDate || 'N/A',
+        status: selectedRoom.status || 'Pending',
+        paymentDate: selectedRoom.bookedDate || 'N/A'
+    }
+] : [];
+            window.studentData = {
+                name: currentUser.name,
+                email: currentUser.email,
+                room: selectedRoom,
+                payments: [], // Empty for Payment History table
+                announcements: [
+                    {
+                        id: 0,
+                        title: 'Water Supply Maintenance',
+                        content: 'Scheduled maintenance on water supply systems will occur on October 5, 2025, from 8 AM to 12 PM. Please plan accordingly and store water if needed.',
+                        date: 'Sep 25, 2025'
+                    },
+                    {
+                        id: 1,
+                        title: 'New Payment Policy',
+                        content: 'Starting October 2025, all payments are due by the 15th of each month. Late payments will incur a ₱200 fee. Check the Payments page for details.',
+                        date: 'Sep 20, 2025'
+                    },
+                    {
+                        id: 2,
+                        title: 'New Student Orientation',
+                        content: 'Join us on October 1, 2025, at 2 PM in the DSSC Multi-Purpose Hall for a boarding house orientation. Learn about dorm policies, facilities, and meet fellow students!',
+                        date: 'Sep 15, 2025'
+                    }
+                ]
+            };
+
+            console.log('Current user:', currentUser);
+            console.log('Student data initialized:', window.studentData);
+            console.log('Pending payments:', pendingPayments);
+
+            // Function to render payment table (untitled)
+            function renderPaymentTable() {
+                const $paymentContent = $('#payment-content');
+                const $makePaymentBtn = $('#make-payment');
+
+                if (!selectedRoom || !pendingPayments.length) {
+                    $paymentContent.html(`
+                        <div class="no-payments-placeholder">
+                           <p>No payments recorded. Book a room to start managing your payments!</p>
+                        </div>
+                    `);
+                    $makePaymentBtn.hide();
+                } else {
+                    let paymentsHtml = `
+                        <table class="payment-table">
+                            <thead>
+                                <tr>
+                                    <th>Room Code</th>
+                                    <th>Amount</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Booked Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    pendingPayments.filter(p => p.status === 'Pending').forEach(payment => {
+                        paymentsHtml += `
+                            <tr>
+                                <td>${payment.roomNo}</td>
+                                <td>₱${payment.amount}</td>
+                                <td>${payment.dueDate}</td>
+                                <td class="status-${payment.status.toLowerCase()}">${payment.status}</td>
+                                <td>${payment.paymentDate}</td>
+                            </tr>
+                        `;
+                    });
+                    paymentsHtml += '</tbody></table>';
+                    $paymentContent.html(paymentsHtml);
+                    $makePaymentBtn.toggle(pendingPayments.some(p => p.status === 'Pending'));
+                }
+            }
+
+            // Function to render payment history table
+            function renderPaymentHistoryTable() {
+                const $paymentsList = $('#payments-list');
+
+                if (!window.studentData.payments.length) {
+                    $paymentsList.html(`
+                        <tr>
+                            <td colspan="5" class="no-payments-placeholder">
+                                <p>No payment history available.</p>
+                            </td>
+                        </tr>
+                    `);
+                } else {
+                    let paymentsHtml = '';
+                    window.studentData.payments.forEach(payment => {
+                        paymentsHtml += `
+                            <tr>
+                                <td>${payment.txnId}</td>
+                                <td>${payment.roomNo}</td>
+                                <td>₱${payment.amount}</td>
+                                <td>${payment.paymentMadeDate}</td>
+                                <td class="status-${payment.status.toLowerCase()}">${payment.status}</td>
+                            </tr>
+                        `;
+                    });
+                    $paymentsList.html(paymentsHtml);
+                }
+            }
+
+            // Initial render of both tables
+            renderPaymentTable();
+            renderPaymentHistoryTable();
+
+            // Make Payment button handler
+            $('#make-payment').on('click', function() {
+                const pendingPayment = pendingPayments.find(p => p.status === 'Pending');
+                if (pendingPayment) {
+                    $('#payment-amount').text(pendingPayment.amount);
+                    $('#manual-payment-id').text(pendingPayment.txnId);
+                    $('#manual-room-no').text(pendingPayment.roomNo);
+                    $('#manual-amount').text(pendingPayment.amount);
+                    $('#manual-due-date').text(pendingPayment.dueDate);
+                    $('#manual-status').text(pendingPayment.status);
+                    $('#paymentModal').css('display', 'flex');
+                    $('#manual-payment-details').show();
+                }
+            });
+
+            // Cancel button handler
+            $('#cancelPayment').on('click', () => {
+                $('#paymentModal').css('display', 'none');
+                $('#manual-payment-details').hide();
+            });
+
+            // Close modal when clicking outside
+            $('#paymentModal').on('click', function(e) {
+                if ($(e.target).hasClass('modal-overlay')) {
+                    $(this).css('display', 'none');
+                    $('#manual-payment-details').hide();
+                }
+            });
+
+            // Navigation handler
+            $('.nav-item').on('click', function(e) {
+                e.preventDefault();
+                const page = $(this).attr('data-page');
+                const pageMap = {
+                    'dashboard': 'student.html',
+                    'room': 'room.html',
+                    'payments': 'payments.html',
+                    'maintenance': 'maintenance.html',
+                    'announcements': 'announcements.html'
+                };
+                if (pageMap[page]) {
+                    window.location.href = pageMap[page];
+                } else {
+                    console.error('Invalid page:', page);
+                    window.location.href = 'student.html';
+                }
+            });
+
+            // Sidebar toggle
+            $('#sidebarToggle').on('click', function() {
+                $('.sidebar').toggleClass('hidden');
+                $('.admin-content').toggleClass('expanded');
+                const isHidden = $('.sidebar').hasClass('hidden');
+                $(this).find('i').removeClass('fa-bars fa-times').addClass(isHidden ? 'fa-bars' : 'fa-times');
+                console.log(isHidden ? 'Sidebar hidden' : 'Sidebar shown');
+            });
+
+            // Profile dropdown
+            $('.admin-profile').on('click', function(e) {
+                e.stopPropagation();
+                const $dropdown = $('#studentProfileDropdown');
+                const $profile = $(this);
+                $dropdown.toggleClass('show');
+                if ($dropdown.hasClass('show')) {
+                    const profileOffset = $profile.offset();
+                    const profileHeight = $profile.outerHeight();
+                    $dropdown.css({
+                        top: profileHeight + 10,
+                        right: $(window).width() - (profileOffset.left + $profile.outerWidth()),
+                        position: 'fixed'
+                    });
+                    console.log('Dropdown positioned at top:', profileHeight + 10, 'right:', $(window).width() - (profileOffset.left + $profile.outerWidth()));
+                }
+                console.log('Profile dropdown toggled');
+            });
+
+            // Close dropdown when clicking outside
+            $(document).on('click', function(event) {
+                const $dropdown = $('#studentProfileDropdown');
+                const $profile = $('.admin-profile');
+                if (!$dropdown.is(event.target) && !$dropdown.has(event.target).length &&
+                    !$profile.is(event.target) && !$profile.has(event.target).length) {
+                    $dropdown.removeClass('show');
+                    console.log('Dropdown closed due to outside click');
+                }
+                  });
+//-------------------------------------------------------------------------------------------------------            
+           
+       // View Profile Modal Functionality
+function initializeProfileModal() {
+    // Remove existing modal if any
+    $('#profileModal').remove();
+    
+    // Get current user data directly from localStorage
+    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || { name: 'Guest', email: 'guest@dssc.edu.ph' };
+    const selectedRoom = JSON.parse(localStorage.getItem('selectedRoom'));
+    
+    // Create profile modal HTML with current user data
+    const profileModalHTML = `
+        <div id="profileModal" class="modal-overlay">
+            <div class="modal profile-modal">
+                <div class="profile-header">
+                    <div class="profile-avatar-container">
+                        <img id="profile-avatar-img" src="https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=4361ee&color=fff" alt="Profile picture" class="profile-avatar">
+                        <button class="change-avatar-btn" title="Change profile picture">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                    <div class="profile-info-header">
+                        <h2 id="profile-modal-name">${currentUser.name}</h2>
+                        <p id="profile-modal-email">${currentUser.email}</p>
+                        <div class="profile-badges">
+                            <span class="profile-badge">Student</span>
+                            <span class="profile-badge" id="profile-room-badge">${selectedRoom ? `Room ${selectedRoom.roomCode}` : 'No Room'}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-tabs">
+                    <button class="profile-tab active" data-tab="personal">Personal Info</button>
+                    <button class="profile-tab" data-tab="preferences">Preferences</button>
+                    <button class="profile-tab" data-tab="activity">Activity</button>
+                </div>
+                
+                <!-- Personal Info Tab -->
+                <div class="tab-content active" id="personal-tab">
+                    <form id="profile-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-input" id="profile-name" value="${currentUser.name}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-input" id="profile-email" value="${currentUser.email}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Student ID</label>
+                                <input type="text" class="form-input" id="profile-student-id" value="STU-${Math.random().toString(36).substr(2, 8).toUpperCase()}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" class="form-input" id="profile-phone" value="+63 912 345 6789" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Emergency Contact</label>
+                                <input type="text" class="form-input" id="profile-emergency-contact" value="Maria Santos" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Emergency Phone</label>
+                                <input type="tel" class="form-input" id="profile-emergency-phone" value="+63 923 456 7890" readonly>
+                            </div>
+                            <div class="form-group full-width">
+                                <label class="form-label">Address</label>
+                                <input type="text" class="form-input" id="profile-address" value="123 Main Street, Dasmariñas City, Cavite" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <span class="stat-number" id="stat-days-stayed">${selectedRoom ? '45' : '0'}</span>
+                                <span class="stat-label">Days Stayed</span>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <span class="stat-number" id="stat-total-paid">₱${selectedRoom ? selectedRoom.price * 2 : '0'}</span>
+                                <span class="stat-label">Total Paid</span>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="stat-number" id="stat-rating">4.8</span>
+                                <span class="stat-label">Rating</span>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <span class="stat-number" id="stat-bookings">${selectedRoom ? '1' : '0'}</span>
+                                <span class="stat-label">Bookings</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Preferences Tab -->
+                <div class="tab-content" id="preferences-tab">
+                    <div class="preferences-grid">
+                        <div class="preference-item">
+                            <span>Email Notifications</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="toggle-checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-item">
+                            <span>SMS Notifications</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="toggle-checkbox">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-item">
+                            <span>Payment Reminders</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="toggle-checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-item">
+                            <span>Maintenance Updates</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="toggle-checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Activity Tab -->
+                <div class="tab-content" id="activity-tab">
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-key"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Room Check-in</div>
+                                <div class="activity-time">${selectedRoom ? selectedRoom.bookedDate : 'Not booked yet'}</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Payment Made</div>
+                                <div class="activity-time">Sep 15, 2025 - ₱${selectedRoom ? selectedRoom.price : '0'}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-outline" id="cancel-edit-btn" style="display: none;">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="edit-profile-btn">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                    <button type="button" class="btn btn-primary" id="save-profile-btn" style="display: none;">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Append modal to body
+    $('body').append(profileModalHTML);
+    
+    // Set up event handlers
+    setupProfileModalHandlers();
+}
+
+function setupProfileModalHandlers() {
+    // Tab switching
+    $(document).on('click', '.profile-tab', function() {
+        const tabId = $(this).data('tab');
+        
+        // Update active tab
+        $('.profile-tab').removeClass('active');
+        $(this).addClass('active');
+        
+        // Show corresponding content
+        $('.tab-content').removeClass('active');
+        $(`#${tabId}-tab`).addClass('active');
+    });
+    
+    // Edit profile button
+    $(document).on('click', '#edit-profile-btn', function() {
+        enableEditMode();
+    });
+    
+    // Cancel edit button
+    $(document).on('click', '#cancel-edit-btn', function() {
+        disableEditMode();
+        resetFormData();
+    });
+    
+    // Save profile button
+    $(document).on('click', '#save-profile-btn', function() {
+        saveProfileChanges();
+    });
+    
+    // Close modal when clicking outside
+    $(document).on('click', '#profileModal', function(e) {
+        if ($(e.target).hasClass('modal-overlay')) {
+            closeProfileModal();
+        }
+    });
+    
+    // Change avatar button
+    $(document).on('click', '.change-avatar-btn', function() {
+        // Avatar change functionality (no alert)
+    });
+}
+
+function enableEditMode() {
+    $('#profile-form').addClass('edit-mode');
+    $('#profile-name, #profile-phone, #profile-emergency-contact, #profile-emergency-phone, #profile-address').prop('readonly', false);
+    
+    $('#edit-profile-btn').hide();
+    $('#cancel-edit-btn').show();
+    $('#save-profile-btn').show();
+}
+
+function disableEditMode() {
+    $('#profile-form').removeClass('edit-mode');
+    $('#profile-name, #profile-phone, #profile-emergency-contact, #profile-emergency-phone, #profile-address').prop('readonly', true);
+    
+    $('#edit-profile-btn').show();
+    $('#cancel-edit-btn').hide();
+    $('#save-profile-btn').hide();
+}
+
+function resetFormData() {
+    // Get current user data
+    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || { name: 'Guest', email: 'guest@dssc.edu.ph' };
+    
+    // Reset form to original values
+    $('#profile-name').val(currentUser.name);
+    $('#profile-phone').val('+63 912 345 6789');
+    $('#profile-emergency-contact').val('Maria Santos');
+    $('#profile-emergency-phone').val('+63 923 456 7890');
+    $('#profile-address').val('123 Main Street, Dasmariñas City, Cavite');
+}
+function saveProfileChanges() {
+    // Get updated values
+    const updatedName = $('#profile-name').val();
+    const updatedPhone = $('#profile-phone').val();
+    const updatedEmergencyContact = $('#profile-emergency-contact').val();
+    const updatedEmergencyPhone = $('#profile-emergency-phone').val();
+    const updatedAddress = $('#profile-address').val();
+    
+    // Update localStorage with new name
+    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+    currentUser.name = updatedName;
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    
+    // Update student data
+    window.studentData.name = updatedName;
+    
+    // Update UI throughout the app - UPDATE ALL LOCATIONS
+    $('#student-name').text(updatedName); // Header name
+    $('#student-name-dropdown').text(updatedName); // Dropdown name
+    
+    // Update avatar with new name - ALL locations
+    const newAvatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(updatedName)}&background=4361ee&color=fff`;
+    
+    // Update avatar in ALL locations:
+    $('#student-profile-img').attr('src', newAvatarUrl); // Header avatar
+    $('#student-profile-img-dropdown').attr('src', newAvatarUrl); // Dropdown avatar
+    $('#profile-avatar-img').attr('src', newAvatarUrl); // Profile modal avatar
+    
+    // Exit edit mode
+    disableEditMode();
+    
+    // Close modal after saving
+    closeProfileModal();
+    
+    console.log('Profile saved - avatar updated everywhere in payments page');
+}
+function openProfileModal() {
+    // Reinitialize modal with latest user data
+    initializeProfileModal();
+    $('#profileModal').css('display', 'flex');
+}
+
+function closeProfileModal() {
+    $('#profileModal').css('display', 'none');
+    disableEditMode(); // Ensure edit mode is disabled when closing
+}
+
+function updateProfileModalData() {
+    // Get current data
+    const selectedRoom = JSON.parse(localStorage.getItem('selectedRoom'));
+    
+    // Update room badge
+    const roomBadge = selectedRoom ? `Room ${selectedRoom.roomCode}` : 'No Room';
+    $('#profile-room-badge').text(roomBadge);
+    
+    // Update stats based on room data
+    if (selectedRoom) {
+        $('#stat-days-stayed').text('45');
+        $('#stat-total-paid').text(`₱${selectedRoom.price * 2}`);
+        $('#stat-bookings').text('1');
+    } else {
+        $('#stat-days-stayed').text('0');
+        $('#stat-total-paid').text('₱0');
+        $('#stat-bookings').text('0');
+    }
+}
+
+// Initialize profile modal
+initializeProfileModal();
+
+// View Profile button handler
+$('#view-profile-btn').on('click', function(e) {
+    e.preventDefault();
+    openProfileModal();
+    $('#studentProfileDropdown').removeClass('show');
+});
+
+//----------------------------------------------------------------------------------------------------
+            // Dark Mode Functionality
+function initializeDarkMode() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.body.classList.add('dark-mode');
+    }
+    updateDarkModeIcon();
+}
+
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    updateDarkModeIcon();
+}
+
+function updateDarkModeIcon() {
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    const darkModeIcon = $('#dark-mode-icon');
+    
+    if (darkModeIcon.length) {
+        darkModeIcon.removeClass('fa-moon fa-sun');
+        darkModeIcon.addClass(isDarkMode ? 'fa-sun' : 'fa-moon');
+        $('#dark-mode-item span').text(isDarkMode ? 'Light Mode' : 'Dark Mode');
+    }
+}
+
+// Initialize when page loads
+initializeDarkMode();
+
+// Add click handler
+$(document).on('click', '#dark-mode-item', function(e) {
+    e.preventDefault();
+    toggleDarkMode();
+    $('#studentProfileDropdown').removeClass('show');
+});
+
+            // Logout
+            $('#student-logout').on('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('justLoggedIn');
+                localStorage.removeItem('selectedRoom');
+                window.studentData = null;
+                window.location.href = '../index.html';
+            });
+        } catch (error) {
+            console.error('Error in payments.js:', error);
+            $('#paymentContainer').addClass('show').css({ display: 'block' });
+            $('#payment-content').html(`
+                <div class="no-payments-placeholder">
+                    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                    <p>An error occurred while loading payment details. Please try again later.</p>
+                </div>
+            `);
+            $('#payments-list').html(`
+                <tr>
+                    <td colspan="5" class="no-payments-placeholder">
+                        <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                        <p>An error occurred while loading payment history. Please try again later.</p>
+                    </td>
+                </tr>
+            `);
+        }
+    });
+    </script>
+</body>
+</html>

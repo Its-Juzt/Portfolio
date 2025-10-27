@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSSC Boarding House - Manage Rooms</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="student-common.css">
+    <script src="js/jquery-3.6.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="jquery-3.6.1.min.js"><\/script>');</script>
+    <style>
+        .rooms-section {
+            margin-top: 2rem;
+        }
+        .room-form {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            background: var(--bg-surface);
+            color: var(--text-primary);
+        }
+        .form-group input[type="file"] {
+            padding: 5px;
+        }
+        .image-preview {
+            margin-top: 10px;
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: var(--border-radius);
+            display: none;
+        }
+        .amenities-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            padding: 8px;
+            background: var(--bg-surface);
+        }
+        .amenities-input-container .tag {
+            background: var(--primary-blue);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        .amenities-input-container .tag .remove-tag {
+            margin-left: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .amenities-input-container input {
+            border: none;
+            outline: none;
+            background: transparent;
+            flex-grow: 1;
+            min-width: 150px;
+        }
+        .submit-btn {
+            background: var(--primary-blue);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background: var(--secondary-blue);
+        }
+        .rooms-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+        }
+        .rooms-table th, .rooms-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .rooms-table th {
+            background: var(--primary-blue);
+            color: var(--light-text);
+        }
+        .status-occupied {
+            color: var(--danger);
+            font-weight: 600;
+        }
+        .status-available {
+            color: var(--success);
+            font-weight: 600;
+        }
+        .amenities-list {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .amenities-list span {
+            display: inline-block;
+            margin-right: 8px;
+            background: var(--bg-surface);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .room-image {
+            width: 100px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+        }
+        .action-btn {
+            background: var(--primary-blue);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .action-btn:hover {
+            background: var(--secondary-blue);
+        }
+        .action-btn.delete {
+            background: var(--danger);
+        }
+        .action-btn.delete:hover {
+            background: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginAnimation" class="login-animation">
+        <div class="animation-content">
+            <div class="icon-container">
+                <i class="fas fa-user-shield student-icon" aria-hidden="true"></i>
+            </div>
+            <h1>Welcome to Admin Portal</h1>
+        </div>
+    </div>
+
+    <div id="studentContainer">
+        <header class="admin-header">
+            <div class="header-left">
+                <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="false">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
+                <h1><i class="fas fa-bed" aria-hidden="true"></i> <span id="page-title">Rooms</span></h1>
+            </div>
+            <div class="header-right">
+                <div class="admin-profile" tabindex="0">
+                    <img id="admin-profile-img" src="https://ui-avatars.com/api/?name=Admin&background=4361ee&color=fff" alt="Admin profile picture">
+                    <span id="admin-name">Admin</span>
+                    <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                </div>
+            </div>
+        </header>
+
+        <div id="studentProfileDropdown" class="admin-profile-dropdown">
+            <div class="dropdown-header">
+                <img id="admin-profile-img-dropdown" src="https://ui-avatars.com/api/?name=Admin&background=4361ee&color=fff" alt="Admin profile picture">
+                <div class="user-info">
+                    <h4 id="admin-name-dropdown">Admin</h4>
+                    <p id="admin-email-dropdown">admin@dssc.edu.ph</p>
+                    <span class="user-role">Admin</span>
+                </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item" id="view-profile-btn">
+                <i class="fas fa-user" aria-hidden="true"></i>
+                <span>View Profile</span>
+            </a>
+            <a href="#" class="dropdown-item" id="dark-mode-item">
+                <i class="fas fa-moon" id="dark-mode-icon" aria-hidden="true"></i>
+                <span>Dark Mode</span>
+            </a>
+            <a href="#" class="dropdown-item" id="admin-settings">
+                <i class="fas fa-cog" aria-hidden="true"></i>
+                <span>Settings</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item logout-item" id="admin-logout">
+                <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+
+        <div class="admin-body">
+            <aside class="sidebar hidden">
+                <nav class="sidebar-nav">
+                    <a href="admin.html" class="nav-item" data-page="dashboard">
+                        <i class="fas fa-home" aria-hidden="true"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="admin-students.html" class="nav-item" data-page="students">
+                        <i class="fas fa-users" aria-hidden="true"></i>
+                        <span>Students</span>
+                    </a>
+                    <a href="admin-rooms.html" class="nav-item active" data-page="rooms">
+                        <i class="fas fa-bed" aria-hidden="true"></i>
+                        <span>Rooms</span>
+                    </a>
+                    <a href="admin-payments.html" class="nav-item" data-page="payments">
+                        <i class="fas fa-money-check-alt" aria-hidden="true"></i>
+                        <span>Payments</span>
+                    </a>
+                    <a href="admin-maintenance.html" class="nav-item" data-page="maintenance">
+                        <i class="fas fa-tools" aria-hidden="true"></i>
+                        <span>Maintenance</span>
+                    </a>
+                    <a href="admin-announcements.html" class="nav-item" data-page="announcements">
+                        <i class="fas fa-bullhorn" aria-hidden="true"></i>
+                        <span>Announcements</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <main class="admin-content expanded" id="pageContent">
+                <h2 class="section-title">Manage Rooms</h2>
+                <div class="rooms-section">
+                    <div class="room-form">
+                        <form id="room-form">
+                            <div class="form-group">
+                                <label for="room-code">Room Code</label>
+                                <input type="text" id="room-code" placeholder="e.g., 101" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="room-type">Room Type</label>
+                                <select id="room-type" required>
+                                    <option value="single-study">Single Study</option>
+                                    <option value="twin-sharing">Twin Sharing</option>
+                                    <option value="quad-dorm">Quad Dorm</option>
+                                    <option value="premium-studio">Premium Studio</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="room-price">Price (₱/month)</label>
+                                <input type="number" id="room-price" placeholder="e.g., 3500" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="room-image">Room Image</label>
+                                <input type="file" id="room-image" accept="image/*">
+                                <img id="image-preview" class="image-preview" alt="Image preview">
+                            </div>
+                            <div class="form-group">
+                                <label for="amenities-input">Amenities (press space to add)</label>
+                                <div class="amenities-input-container" id="amenities-container">
+                                    <input type="text" id="amenities-input" placeholder="Type amenity and press space">
+                                </div>
+                            </div>
+                            <button type="submit" class="submit-btn">Add Room</button>
+                        </form>
+                    </div>
+                    <table class="rooms-table">
+                        <thead>
+                            <tr>
+                                <th>Room Code</th>
+                                <th>Type</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Occupant</th>
+                                <th>Image</th>
+                                <th>Amenities</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>101</td>
+                                <td>Single Study</td>
+                                <td>₱3,500</td>
+                                <td class="status-occupied">Occupied</td>
+                                <td>Alice Smith</td>
+                                <td><img src="https://via.placeholder.com/100x60" class="room-image" alt="Room 101"></td>
+                                <td class="amenities-list">
+                                    <span>Single bed</span>
+                                    <span>Study desk</span>
+                                    <span>Ceiling fan</span>
+                                    <span>Wi-Fi</span>
+                                    <span>Private bathroom</span>
+                                </td>
+                                <td>
+                                    <button class="action-btn">Edit</button>
+                                    <button class="action-btn delete">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>102</td>
+                                <td>Twin Sharing</td>
+                                <td>₱2,800</td>
+                                <td class="status-available">Available</td>
+                                <td>None</td>
+                                <td><img src="https://via.placeholder.com/100x60" class="room-image" alt="Room 102"></td>
+                                <td class="amenities-list">
+                                    <span>Single bed</span>
+                                    <span>Study desk</span>
+                                    <span>Wi-Fi</span>
+                                    <span>Wardrobe</span>
+                                </td>
+                                <td>
+                                    <button class="action-btn">Edit</button>
+                                    <button class="action-btn delete">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2025 DSSC Boarding House. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            try {
+                const currentAdmin = { name: 'Admin', email: 'admin@dssc.edu.ph' };
+                $('#admin-name, #admin-name-dropdown').text(currentAdmin.name);
+                $('#admin-email-dropdown').text(currentAdmin.email);
+
+                setTimeout(() => {
+                    $('.student-icon').addClass('show-icon');
+                }, 1000);
+                setTimeout(() => {
+                    $('#loginAnimation').addClass('hide').css({ display: 'none' });
+                    $('#studentContainer').addClass('show').css({ display: 'block' });
+                }, 2500);
+
+                $('#sidebarToggle').on('click', function() {
+                    $('.sidebar').toggleClass('hidden');
+                    $('.admin-content').toggleClass('expanded');
+                    const isHidden = $('.sidebar').hasClass('hidden');
+                    $(this).find('i').removeClass('fa-bars fa-times').addClass(isHidden ? 'fa-bars' : 'fa-times');
+                    $(this).attr('aria-expanded', !isHidden);
+                });
+
+                $('.admin-profile').on('click', function(e) {
+                    e.stopPropagation();
+                    const $dropdown = $('#studentProfileDropdown');
+                    $dropdown.toggleClass('show');
+                    if ($dropdown.hasClass('show')) {
+                        const profileOffset = $(this).offset();
+                        const profileHeight = $(this).outerHeight();
+                        $dropdown.css({
+                            top: profileHeight + 10,
+                            right: $(window).width() - (profileOffset.left + $(this).outerWidth()),
+                            position: 'fixed'
+                        });
+                    }
+                });
+
+                $(document).on('click', function(event) {
+                    if (!$(event.target).closest('#studentProfileDropdown, .admin-profile').length) {
+                        $('#studentProfileDropdown').removeClass('show');
+                    }
+                });
+
+                function initializeDarkMode() {
+                    const savedTheme = localStorage.getItem('theme');
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                        document.body.classList.add('dark-mode');
+                    }
+                    updateDarkModeIcon();
+                }
+
+                function toggleDarkMode() {
+                    document.body.classList.toggle('dark-mode');
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+                    updateDarkModeIcon();
+                }
+
+                function updateDarkModeIcon() {
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    const darkModeIcon = $('#dark-mode-icon');
+                    if (darkModeIcon.length) {
+                        darkModeIcon.removeClass('fa-moon fa-sun').addClass(isDarkMode ? 'fa-sun' : 'fa-moon');
+                        $('#dark-mode-item span').text(isDarkMode ? 'Light Mode' : 'Dark Mode');
+                    }
+                }
+
+                initializeDarkMode();
+                $(document).on('click', '#dark-mode-item', function(e) {
+                    e.preventDefault();
+                    toggleDarkMode();
+                    $('#studentProfileDropdown').removeClass('show');
+                });
+
+                $('#admin-logout').on('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('justLoggedIn');
+                    localStorage.removeItem('selectedRoom');
+                    window.location.href = '../index.html';
+                });
+
+                // Image preview
+                $('#room-image').on('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            $('#image-preview').attr('src', e.target.result).show();
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        $('#image-preview').hide();
+                    }
+                });
+
+                // Amenities tag input
+                const $amenitiesInput = $('#amenities-input');
+                const $amenitiesContainer = $('#amenities-container');
+
+                $amenitiesInput.on('keydown', function(e) {
+                    if (e.key === ' ' || e.key === 'Enter') {
+                        e.preventDefault();
+                        const value = $amenitiesInput.val().trim();
+                        if (value) {
+                            const $tag = $('<span>', {
+                                class: 'tag',
+                                text: value
+                            }).append(
+                                $('<span>', {
+                                    class: 'remove-tag',
+                                    text: '×',
+                                    click: function() {
+                                        $(this).parent().remove();
+                                    }
+                                })
+                            );
+                            $amenitiesInput.before($tag);
+                            $amenitiesInput.val('');
+                        }
+                    }
+                });
+
+                // Handle form submission
+                $('#room-form').on('submit', function(e) {
+                    e.preventDefault();
+                    const roomCode = $('#room-code').val();
+                    const roomType = $('#room-type').val();
+                    const roomPrice = $('#room-price').val();
+                    const roomImage = $('#room-image').val() ? 'Image uploaded' : 'No image';
+                    const amenities = $('.amenities-input-container .tag')
+                        .map(function() { return $(this).text().replace('×', '').trim(); })
+                        .get()
+                        .join(', ');
+                    alert(`Room Added: ${roomCode}, ${roomType}, ₱${roomPrice}, Image: ${roomImage}, Amenities: ${amenities || 'None'}`);
+                    // In a real app, send data to backend here
+                    this.reset();
+                    $('#image-preview').hide();
+                    $('.amenities-input-container .tag').remove();
+                });
+            } catch (error) {
+                console.error('Error in admin-rooms.js:', error);
+                $('#loginAnimation').addClass('hide').css({ display: 'none' });
+                $('#studentContainer').addClass('show').css({ display: 'block' });
+            }
+        });
+    </script>
+</body>
+</html>

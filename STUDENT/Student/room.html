@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSSC Boarding House - Room</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="css/room.css">
+    <script src="js/jquery-3.6.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="jquery-3.6.1.min.js"><\/script>');</script>
+</head>
+<body>
+    <!-- Room Container -->
+    <div id="roomContainer">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-left">
+                <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
+                <h1><i class="fas fa-bed" aria-hidden="true"></i> <span id="page-title">Rooms</span></h1>
+            </div>
+            <div class="header-right">
+                <div class="admin-profile" tabindex="0">
+                    <img id="student-profile-img" src="https://ui-avatars.com/api/?name=Guest&background=4361ee&color=fff" alt="Student profile picture">
+                    <span id="student-name"></span>
+                    <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Student Profile Dropdown -->
+        <div id="studentProfileDropdown" class="admin-profile-dropdown">
+            <div class="dropdown-header">
+                <img id="student-profile-img-dropdown" src="https://ui-avatars.com/api/?name=Guest&background=4361ee&color=fff" alt="Student profile picture">
+                <div class="user-info">
+                    <h4 id="student-name-dropdown"></h4>
+                    <p id="student-email-dropdown"></p>
+                    <span class="user-role">Student</span>
+                </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item" id="view-profile-btn">
+                <i class="fas fa-user" aria-hidden="true"></i>
+                <span>View Profile</span>
+            </a>
+            <a href="#" class="dropdown-item" id="dark-mode-item">
+                <i class="fas fa-moon" id="dark-mode-icon" aria-hidden="true"></i>
+                <span>Dark Mode</span>
+            </a>
+            <a href="#" class="dropdown-item" id="student-settings">
+                <i class="fas fa-cog" aria-hidden="true"></i>
+                <span>Settings</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item logout-item" id="student-logout">
+                <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+
+        <!-- Room Body -->
+        <div class="admin-body">
+            <!-- Sidebar -->
+            <aside class="sidebar hidden">
+                <nav class="sidebar-nav">
+                    <a href="student.html" class="nav-item" data-page="dashboard">
+                        <i class="fas fa-home" aria-hidden="true"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="room.html" class="nav-item active" data-page="room">
+                        <i class="fas fa-bed" aria-hidden="true"></i>
+                        <span>Rooms</span>
+                    </a>
+                    <a href="payments.html" class="nav-item" data-page="payments">
+                        <i class="fas fa-money-check-alt" aria-hidden="true"></i>
+                        <span>Payments</span>
+                    </a>
+                    <a href="maintenance.html" class="nav-item" data-page="maintenance">
+                        <i class="fas fa-tools" aria-hidden="true"></i>
+                        <span>Maintenance</span>
+                    </a>
+                    <a href="announcements.html" class="nav-item" data-page="announcements">
+                        <i class="fas fa-bullhorn" aria-hidden="true"></i>
+                        <span>Announcements</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Room Content -->
+            <main class="admin-content expanded" id="pageContent">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card welcome-card">
+                        <h3>My Current Booking</h3>
+                        <div id="current-room-content" class="room-info-container"></div>
+                    </div>
+                    <div class="dashboard-card available-rooms-card">
+                        <h3>Available Rooms</h3>
+                        <div id="available-rooms-list" class="room-list"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Cancel Booking Modal -->
+        <div id="cancelBookingModal" class="modal-overlay">
+            <div class="modal">
+                <h3>Confirm Cancellation</h3>
+                <p>Are you sure you want to cancel your booking? This action cannot be undone.</p>
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" id="confirmCancel">Cancel Booking</button>
+                    <button class="modal-btn keep" id="keepBooking">Keep Booking</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2025 DSSC Boarding House. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/room.js">
+    
+    </script>
+</body>
+</html>
