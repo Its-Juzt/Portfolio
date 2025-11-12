@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
    if (studentLoginForm) {
     studentLoginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const email = document.getElementById('studPortfolioent-email').value.trim();
+        const email = document.getElementById('student-email').value.trim();
         const password = document.getElementById('student-password').value.trim();
         const user = {"name": "TEST", "username": "username"}
         
@@ -362,3 +362,4 @@ document.addEventListener('DOMContentLoaded', function() {
         addressCard.style.cursor = 'pointer';
     }
 });
+
