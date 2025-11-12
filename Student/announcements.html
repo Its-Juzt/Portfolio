@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSSC Boarding House - Announcements</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="css/ann.css">
+    <script src="js/jquery-3.6.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="jquery-3.6.1.min.js"><\/script>');</script>
+</head>
+<body>
+    <!-- Login Animation -->
+    <div id="loginAnimation" class="login-animation">
+        <div class="animation-content">
+            <div class="icon-container">
+                <i class="fas fa-user-graduate student-icon" aria-hidden="true"></i>
+                <div class="rolling-circle">
+                    <div class="particle particle-1"></div>
+                    <div class="particle particle-2"></div>
+                </div>
+                <div class="sparkles">
+                    <div class="sparkle sparkle-1"></div>
+                    <div class="sparkle sparkle-2"></div>
+                    <div class="sparkle sparkle-3"></div>
+                </div>
+            </div>
+            <h1>Welcome to Student Portal</h1>
+        </div>
+    </div>
+
+    <!-- Student Container -->
+    <div id="studentContainer">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-left">
+                <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="false">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
+                <h1><i class="fas fa-bullhorn" aria-hidden="true"></i> <span id="page-title">Announcements</span></h1>
+            </div>
+            <div class="header-right">
+                <div class="admin-profile" tabindex="0">
+                    <img id="student-profile-img" src="https://ui-avatars.com/api/?name=Guest&background=4361ee&color=fff" alt="Student profile picture">
+                    <span id="student-name"></span>
+                    <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Student Profile Dropdown -->
+        <div id="studentProfileDropdown" class="admin-profile-dropdown">
+            <div class="dropdown-header">
+                <img id="student-profile-img-dropdown" src="https://ui-avatars.com/api/?name=Guest&background=4361ee&color=fff" alt="Student profile picture">
+                <div class="user-info">
+                    <h4 id="student-name-dropdown"></h4>
+                    <p id="student-email-dropdown"></p>
+                    <span class="user-role">Student</span>
+                </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item" id="view-profile-btn">
+                <i class="fas fa-user" aria-hidden="true"></i>
+                <span>View Profile</span>
+            </a>
+            <a href="#" class="dropdown-item" id="dark-mode-item">
+                <i class="fas fa-moon" id="dark-mode-icon" aria-hidden="true"></i>
+                <span>Dark Mode</span>
+            </a>
+            <a href="#" class="dropdown-item" id="student-settings">
+                <i class="fas fa-cog" aria-hidden="true"></i>
+                <span>Settings</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item logout-item" id="student-logout">
+                <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+
+        <!-- Student Body -->
+        <div class="admin-body">
+            <!-- Sidebar -->
+            <aside class="sidebar hidden">
+                <nav class="sidebar-nav">
+                    <a href="student.html" class="nav-item" data-page="dashboard">
+                        <i class="fas fa-home" aria-hidden="true"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="room.html" class="nav-item" data-page="room">
+                        <i class="fas fa-bed" aria-hidden="true"></i>
+                        <span>Rooms</span>
+                    </a>
+                    <a href="payments.html" class="nav-item" data-page="payments">
+                        <i class="fas fa-money-check-alt" aria-hidden="true"></i>
+                        <span>Payments</span>
+                    </a>
+                    <a href="maintenance.html" class="nav-item" data-page="maintenance">
+                        <i class="fas fa-tools" aria-hidden="true"></i>
+                        <span>Maintenance</span>
+                    </a>
+                    <a href="announcements.html" class="nav-item active" data-page="announcements">
+                        <i class="fas fa-bullhorn" aria-hidden="true"></i>
+                        <span>Announcements</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Announcements Content -->
+            <main class="admin-content expanded" id="pageContent">
+                <h2 class="section-title">Announcements</h2>
+                <div class="announcements-section">
+                    <div id="announcements-list" class="announcements-scroll"></div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2025 DSSC Boarding House. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            try {
+                console.log('announcements.js loaded');
+
+                // Initialize student data
+                const currentUser = JSON.parse(localStorage.getItem('currentUser')) || { name: 'Guest', email: 'guest@dssc.edu.ph' };
+                const selectedRoom = JSON.parse(localStorage.getItem('selectedRoom')) || null;
+                window.studentData = {
+                    name: currentUser.name,
+                    email: currentUser.email,
+                    room: selectedRoom,
+                    announcements: [
+                        {
+                            id: 0,
+                            title: 'Water Supply Maintenance',
+                            content: 'Scheduled maintenance on water supply systems will occur on October 15, 2025, from 8 AM to 12 PM. Please plan accordingly and store water if needed.',
+                            date: 'Oct 5, 2025'
+                        },
+                        {
+                            id: 1,
+                            title: 'New Payment Policy',
+                            content: 'Starting November 2025, all payments are due by the 15th of each month. Late payments will incur a ₱200 fee. Check the Payments page for details.',
+                            date: 'Oct 1, 2025'
+                        },
+                        {
+                            id: 2,
+                            title: 'New Student Orientation',
+                            content: 'Join us on October 20, 2025, at 2 PM in the DSSC Multi-Purpose Hall for a boarding house orientation. Learn about dorm policies, facilities, and meet fellow students!',
+                            date: 'Oct 1, 2025',
+                            pinned: true
+                        },
+                        {
+                            id: 3,
+                            title: 'Electricity Maintenance',
+                            content: 'Scheduled maintenance on electrical systems will occur on October 18, 2025, from 9 AM to 1 PM. Expect temporary power interruptions in certain areas.',
+                            date: 'Oct 10, 2025'
+                        },
+                        {
+                            id: 4,
+                            title: 'Payment Deadline Reminder',
+                            content: 'Reminder: Payments for October are due by October 15, 2025. Avoid late fees by paying on time. Visit the Payments page for more information.',
+                            date: 'Oct 8, 2025'
+                        }
+                    ]
+                };
+
+                console.log('Current user:', currentUser);
+                console.log('Student data initialized:', window.studentData);
+
+                // Update UI with user data
+                function updateUserUI() {
+                    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=4361ee&color=fff`;
+                    $('#student-name, #student-name-dropdown').text(currentUser.name);
+                    $('#student-email-dropdown').text(currentUser.email);
+                    $('#student-profile-img, #student-profile-img-dropdown').attr('src', avatarUrl);
+                }
+                updateUserUI();
+
+                // Profile Modal Functionality from room.html
+                function initializeProfileModal() {
+                    // Remove existing modal if any
+                    $('#profileModal').remove();
+                    
+                    // Create profile modal HTML with current user data
+                    const profileModalHTML = `
+                        <div id="profileModal" class="modal-overlay">
+                            <div class="modal profile-modal">
+                                <div class="profile-header">
+                                    <div class="profile-avatar-container">
+                                        <img id="profile-avatar-img" src="https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=4361ee&color=fff" alt="Profile picture" class="profile-avatar">
+                                        <button class="change-avatar-btn" title="Change profile picture">
+                                            <i class="fas fa-camera"></i>
+                                        </button>
+                                    </div>
+                                    <div class="profile-info-header">
+                                        <h2 id="profile-modal-name">${currentUser.name}</h2>
+                                        <p id="profile-modal-email">${currentUser.email}</p>
+                                        <div class="profile-badges">
+                                            <span class="profile-badge">Student</span>
+                                            <span class="profile-badge" id="profile-room-badge">${selectedRoom ? `Room ${selectedRoom.roomCode}` : 'No Room'}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="profile-tabs">
+                                    <button class="profile-tab active" data-tab="personal">Personal Info</button>
+                                    <button class="profile-tab" data-tab="preferences">Preferences</button>
+                                    <button class="profile-tab" data-tab="activity">Activity</button>
+                                </div>
+                                
+                                <!-- Personal Info Tab -->
+                                <div class="tab-content active" id="personal-tab">
+                                    <form id="profile-form">
+                                        <div class="form-grid">
+                                            <div class="form-group">
+                                                <label class="form-label">Full Name</label>
+                                                <input type="text" class="form-input" id="profile-name" value="${currentUser.name}" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Email</label>
+                                                <input type="email" class="form-input" id="profile-email" value="${currentUser.email}" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Student ID</label>
+                                                <input type="text" class="form-input" id="profile-student-id" value="STU-${Math.random().toString(36).substr(2, 8).toUpperCase()}" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Phone Number</label>
+                                                <input type="tel" class="form-input" id="profile-phone" value="+63 912 345 6789" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Emergency Contact</label>
+                                                <input type="text" class="form-input" id="profile-emergency-contact" value="Maria Santos" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Emergency Phone</label>
+                                                <input type="tel" class="form-input" id="profile-emergency-phone" value="+63 923 456 7890" readonly>
+                                            </div>
+                                            <div class="form-group full-width">
+                                                <label class="form-label">Address</label>
+                                                <input type="text" class="form-input" id="profile-address" value="123 Main Street, Dasmariñas City, Cavite" readonly>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="profile-stats">
+                                            <div class="stat-item">
+                                                <div class="stat-icon">
+                                                    <i class="fas fa-home"></i>
+                                                </div>
+                                                <span class="stat-number" id="stat-days-stayed">${selectedRoom ? '45' : '0'}</span>
+                                                <span class="stat-label">Days Stayed</span>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-icon">
+                                                    <i class="fas fa-money-bill-wave"></i>
+                                                </div>
+                                                <span class="stat-number" id="stat-total-paid">₱${selectedRoom ? selectedRoom.price * 2 : '0'}</span>
+                                                <span class="stat-label">Total Paid</span>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-icon">
+                                                    <i class="fas fa-star"></i>
+                                                </div>
+                                                <span class="stat-number" id="stat-rating">4.8</span>
+                                                <span class="stat-label">Rating</span>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-icon">
+                                                    <i class="fas fa-calendar-check"></i>
+                                                </div>
+                                                <span class="stat-number" id="stat-bookings">${selectedRoom ? '1' : '0'}</span>
+                                                <span class="stat-label">Bookings</span>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                                <!-- Preferences Tab -->
+                                <div class="tab-content" id="preferences-tab">
+                                    <div class="preferences-grid">
+                                        <div class="preference-item">
+                                            <span>Email Notifications</span>
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" class="toggle-checkbox" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                        <div class="preference-item">
+                                            <span>SMS Notifications</span>
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" class="toggle-checkbox">
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                        <div class="preference-item">
+                                            <span>Payment Reminders</span>
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" class="toggle-checkbox" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                        <div class="preference-item">
+                                            <span>Maintenance Updates</span>
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" class="toggle-checkbox" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Activity Tab -->
+                                <div class="tab-content" id="activity-tab">
+                                    <div class="activity-list">
+                                        <div class="activity-item">
+                                            <div class="activity-icon">
+                                                <i class="fas fa-key"></i>
+                                            </div>
+                                            <div class="activity-content">
+                                                <div class="activity-title">Room Check-in</div>
+                                                <div class="activity-time">${selectedRoom ? selectedRoom.bookedDate : 'Not booked yet'}</div>
+                                            </div>
+                                        </div>
+                                        <div class="activity-item">
+                                            <div class="activity-icon">
+                                                <i class="fas fa-money-bill-wave"></i>
+                                            </div>
+                                            <div class="activity-content">
+                                                <div class="activity-title">Payment Made</div>
+                                                <div class="activity-time">Sep 15, 2025 - ₱${selectedRoom ? selectedRoom.price : '0'}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="action-buttons">
+                                    <button type="button" class="btn btn-outline" id="cancel-edit-btn" style="display: none;">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" id="edit-profile-btn">
+                                        <i class="fas fa-edit"></i> Edit Profile
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="save-profile-btn" style="display: none;">
+                                        <i class="fas fa-save"></i> Save Changes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Append modal to body
+                    $('body').append(profileModalHTML);
+                    
+                    // Set up event handlers
+                    setupProfileModalHandlers();
+                }
+
+                function setupProfileModalHandlers() {
+                    // Tab switching
+                    $(document).on('click', '.profile-tab', function() {
+                        const tabId = $(this).data('tab');
+                        
+                        // Update active tab
+                        $('.profile-tab').removeClass('active');
+                        $(this).addClass('active');
+                        
+                        // Show corresponding content
+                        $('.tab-content').removeClass('active');
+                        $(`#${tabId}-tab`).addClass('active');
+                    });
+                    
+                    // Edit profile button
+                    $(document).on('click', '#edit-profile-btn', function() {
+                        enableEditMode();
+                    });
+                    
+                    // Cancel edit button
+                    $(document).on('click', '#cancel-edit-btn', function() {
+                        disableEditMode();
+                        resetFormData();
+                    });
+                    
+                    // Save profile button
+                    $(document).on('click', '#save-profile-btn', function() {
+                        saveProfileChanges();
+                    });
+                    
+                    // Close modal when clicking outside
+                    $(document).on('click', '#profileModal', function(e) {
+                        if ($(e.target).hasClass('modal-overlay')) {
+                            closeProfileModal();
+                        }
+                    });
+                    
+                    // Change avatar button
+                    $(document).on('click', '.change-avatar-btn', function() {
+                        // Avatar change functionality (no alert)
+                    });
+                }
+
+                function enableEditMode() {
+                    $('#profile-form').addClass('edit-mode');
+                    $('#profile-name, #profile-phone, #profile-emergency-contact, #profile-emergency-phone, #profile-address').prop('readonly', false);
+                    
+                    $('#edit-profile-btn').hide();
+                    $('#cancel-edit-btn').show();
+                    $('#save-profile-btn').show();
+                }
+
+                function disableEditMode() {
+                    $('#profile-form').removeClass('edit-mode');
+                    $('#profile-name, #profile-phone, #profile-emergency-contact, #profile-emergency-phone, #profile-address').prop('readonly', true);
+                    
+                    $('#edit-profile-btn').show();
+                    $('#cancel-edit-btn').hide();
+                    $('#save-profile-btn').hide();
+                }
+
+                function resetFormData() {
+                    // Get current user data
+                    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || { name: 'Guest', email: 'guest@dssc.edu.ph' };
+                    
+                    // Reset form to original values
+                    $('#profile-name').val(currentUser.name);
+                    $('#profile-phone').val('+63 912 345 6789');
+                    $('#profile-emergency-contact').val('Maria Santos');
+                    $('#profile-emergency-phone').val('+63 923 456 7890');
+                    $('#profile-address').val('123 Main Street, Dasmariñas City, Cavite');
+                }
+
+                function saveProfileChanges() {
+                    // Get updated values
+                    const updatedName = $('#profile-name').val();
+                    const updatedPhone = $('#profile-phone').val();
+                    const updatedEmergencyContact = $('#profile-emergency-contact').val();
+                    const updatedEmergencyPhone = $('#profile-emergency-phone').val();
+                    const updatedAddress = $('#profile-address').val();
+                    
+                    // Update localStorage with new name
+                    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+                    currentUser.name = updatedName;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // Update student data
+                    window.studentData.name = updatedName;
+                    
+                    // Update UI throughout the app
+                    $('#student-name').text(updatedName); // Header name
+                    $('#student-name-dropdown').text(updatedName); // Dropdown name
+                    
+                    // Update avatar with new name - ALL locations
+                    const newAvatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(updatedName)}&background=4361ee&color=fff`;
+                    
+                    // Update avatar in ALL locations:
+                    $('#student-profile-img').attr('src', newAvatarUrl); // Header avatar
+                    $('#student-profile-img-dropdown').attr('src', newAvatarUrl); // Dropdown avatar
+                    $('#profile-avatar-img').attr('src', newAvatarUrl); // Profile modal avatar
+                    
+                    // Exit edit mode
+                    disableEditMode();
+                    
+                    // Close modal after saving
+                    closeProfileModal();
+                }
+
+                function openProfileModal() {
+                    // Reinitialize modal with latest user data
+                    initializeProfileModal();
+                    $('#profileModal').css('display', 'flex');
+                }
+
+                function closeProfileModal() {
+                    $('#profileModal').css('display', 'none');
+                    disableEditMode(); // Ensure edit mode is disabled when closing
+                }
+
+                function updateProfileModalData() {
+                    // Get current data
+                    const selectedRoom = JSON.parse(localStorage.getItem('selectedRoom'));
+                    
+                    // Update room badge
+                    const roomBadge = selectedRoom ? `Room ${selectedRoom.roomCode}` : 'No Room';
+                    $('#profile-room-badge').text(roomBadge);
+                    
+                    // Update stats based on room data
+                    if (selectedRoom) {
+                        $('#stat-days-stayed').text('45');
+                        $('#stat-total-paid').text(`₱${selectedRoom.price * 2}`);
+                        $('#stat-bookings').text('1');
+                    } else {
+                        $('#stat-days-stayed').text('0');
+                        $('#stat-total-paid').text('₱0');
+                        $('#stat-bookings').text('0');
+                    }
+                }
+
+                // Initialize profile modal
+                initializeProfileModal();
+
+                // View Profile button handler
+                $('#view-profile-btn').on('click', function(e) {
+                    e.preventDefault();
+                    openProfileModal();
+                    $('#studentProfileDropdown').removeClass('show');
+                });
+
+                // Settings button handler
+                $(document).on('click', '#student-settings', function(e) {
+                    e.preventDefault();
+                    openProfileModal();
+                    $('.profile-tab[data-tab="preferences"]').click(); // Open preferences tab
+                    $('#studentProfileDropdown').removeClass('show');
+                });
+
+                // Login animation
+                const justLoggedIn = localStorage.getItem('justLoggedIn') === 'true';
+                if (justLoggedIn) {
+                    console.log('Showing login animation');
+                    $('#loginAnimation').removeClass('hide').css({ display: 'flex', opacity: 1, visibility: 'visible' });
+                    $('#studentContainer').css({ display: 'none' });
+                    setTimeout(() => {
+                        $('.student-icon').addClass('show-icon');
+                        $('.sparkles').addClass('show-sparkles');
+                    }, 1000);
+                    setTimeout(() => {
+                        $('#loginAnimation').addClass('hide').css({ display: 'none' });
+                        localStorage.removeItem('justLoggedIn');
+                        $('#studentContainer').addClass('show').css({ display: 'block' });
+                    }, 3500);
+                } else {
+                    $('#loginAnimation').addClass('hide').css({ display: 'none' });
+                    $('#studentContainer').addClass('show').css({ display: 'block' });
+                }
+
+                // Render announcements
+                const $announcementsList = $('#announcements-list');
+                let announcementHtml = '';
+                const pinnedAnnouncement = window.studentData.announcements.find(ann => ann.pinned);
+                if (pinnedAnnouncement) {
+                    let announcementLink = '';
+                    if (pinnedAnnouncement.title.toLowerCase().includes('payment')) {
+                        announcementLink = 'payments.html';
+                    } else if (pinnedAnnouncement.title.toLowerCase().includes('maintenance')) {
+                        announcementLink = 'maintenance.html';
+                    }
+                    announcementHtml += `
+                        <div class="announcement-item pinned" data-id="${pinnedAnnouncement.id}">
+                            ${announcementLink ? `<a href="${announcementLink}" aria-label="${pinnedAnnouncement.title}">` : ''}
+                                <div class="announcement-content">
+                                    <i class="fas fa-bullhorn icon" aria-hidden="true"></i>
+                                    <div class="announcement-text">
+                                        <h4>${pinnedAnnouncement.title}</h4>
+                                        <p>${pinnedAnnouncement.content}</p>
+                                        <p><small>Posted on ${pinnedAnnouncement.date}</small></p>
+                                        <span class="pinned-badge">Pinned</span>
+                                    </div>
+                                </div>
+                            ${announcementLink ? `</a>` : ''}
+                        </div>
+                    `;
+                }
+
+                const otherAnnouncements = window.studentData.announcements
+                    .filter(ann => !ann.pinned)
+                    .sort((a, b) => new Date(b.date) - new Date(a.date));
+                otherAnnouncements.forEach(announcement => {
+                    let announcementLink = '';
+                    if (announcement.title.toLowerCase().includes('payment')) {
+                        announcementLink = 'payments.html';
+                    } else if (announcement.title.toLowerCase().includes('maintenance')) {
+                        announcementLink = 'maintenance.html';
+                    }
+                    announcementHtml += `
+                        <div class="announcement-item" data-id="${announcement.id}">
+                            ${announcementLink ? `<a href="${announcementLink}" aria-label="${announcement.title}">` : ''}
+                                <div class="announcement-content">
+                                    <i class="fas fa-bullhorn icon" aria-hidden="true"></i>
+                                    <div class="announcement-text">
+                                        <h4>${announcement.title}</h4>
+                                        <p>${announcement.content}</p>
+                                        <p><small>Posted on ${announcement.date}</small></p>
+                                    </div>
+                                </div>
+                            ${announcementLink ? `</a>` : ''}
+                        </div>
+                    `;
+                });
+                $announcementsList.html(announcementHtml);
+
+                // Highlight announcement from URL parameter
+                const urlParams = new URLSearchParams(window.location.search);
+                const announcementId = urlParams.get('id');
+                if (announcementId) {
+                    const $targetAnnouncement = $(`.announcement-item[data-id="${announcementId}"]`);
+                    if ($targetAnnouncement.length) {
+                        $targetAnnouncement.addClass('highlighted');
+                        $targetAnnouncement[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+
+                // Sidebar toggle
+                $('#sidebarToggle').on('click', function() {
+                    $('.sidebar').toggleClass('hidden');
+                    $('.admin-content').toggleClass('expanded');
+                    const isHidden = $('.sidebar').hasClass('hidden');
+                    $(this).find('i').removeClass('fa-bars fa-times').addClass(isHidden ? 'fa-bars' : 'fa-times');
+                    $(this).attr('aria-expanded', !isHidden);
+                    console.log(isHidden ? 'Sidebar hidden' : 'Sidebar shown');
+                });
+
+                // Profile dropdown
+                $(document).on('click', '.admin-profile', function(e) {
+                    e.stopPropagation();
+                    const $dropdown = $('#studentProfileDropdown');
+                    const $profile = $(this);
+                    $dropdown.toggleClass('show');
+                    if ($dropdown.hasClass('show')) {
+                        const profileOffset = $profile.offset();
+                        const profileHeight = $profile.outerHeight();
+                        $dropdown.css({
+                            top: profileHeight + 10,
+                            right: $(window).width() - (profileOffset.left + $profile.outerWidth()),
+                            position: 'fixed'
+                        });
+                        console.log('Dropdown positioned at top:', profileHeight + 10, 'right:', $(window).width() - (profileOffset.left + $profile.outerWidth()));
+                    }
+                    console.log('Profile dropdown toggled');
+                });
+
+                // Close dropdown when clicking outside
+                $(document).on('click', function(event) {
+                    const $dropdown = $('#studentProfileDropdown');
+                    const $profile = $('.admin-profile');
+                    if (!$dropdown.is(event.target) && !$dropdown.has(event.target).length &&
+                        !$profile.is(event.target) && !$profile.has(event.target).length) {
+                        $dropdown.removeClass('show');
+                        console.log('Dropdown closed due to outside click');
+                    }
+                });
+
+                // Dark Mode Functionality
+                function initializeDarkMode() {
+                    const savedTheme = localStorage.getItem('theme');
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                        document.body.classList.add('dark-mode');
+                    }
+                    updateDarkModeIcon();
+                }
+
+                function toggleDarkMode() {
+                    document.body.classList.toggle('dark-mode');
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+                    updateDarkModeIcon();
+                }
+
+                function updateDarkModeIcon() {
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    const darkModeIcon = $('#dark-mode-icon');
+                    if (darkModeIcon.length) {
+                        darkModeIcon.removeClass('fa-moon fa-sun').addClass(isDarkMode ? 'fa-sun' : 'fa-moon');
+                        $('#dark-mode-item span').text(isDarkMode ? 'Light Mode' : 'Dark Mode');
+                    }
+                }
+
+                initializeDarkMode();
+
+                $(document).on('click', '#dark-mode-item', function(e) {
+                    e.preventDefault();
+                    toggleDarkMode();
+                    $('#studentProfileDropdown').removeClass('show');
+                });
+
+                // Logout
+                $(document).on('click', '#student-logout', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('justLoggedIn');
+                    localStorage.removeItem('selectedRoom');
+                    window.studentData = null;
+                    window.location.href = '../index.html';
+                });
+
+            } catch (error) {
+                console.error('Error in announcements.js:', error);
+                $('#loginAnimation').addClass('hide').css({ display: 'none' });
+                $('#studentContainer').addClass('show').css({ display: 'block' });
+            }
+        });
+    </script>
+</body>
+</html>

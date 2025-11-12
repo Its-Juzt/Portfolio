@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSSC Boarding House - Student Housing</title>
+    <link rel="stylesheet" href="Student/styles.css">
+    <link rel="stylesheet" href="Student/css/all.min.css">
+    <script src="Student/js/jquery-3.6.1.min.js"></script>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>DSSC Boarding House</h1>
+                    <p>Davao del Sur State College</p>
+                </div>
+            </div>
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#rooms">Rooms</a></li>
+                    <li><a href="#rules">Rules</a></li>
+                    <li><a href="#announcements">Announcements</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <button class="mobile-menu-btn" id="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+            <div class="auth-buttons">
+                <button class="student-login-btn" id="student-login-button">Student Login</button>
+                <button class="login-btn" id="login-button">Admin Login</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>Comfortable & Secure Student Housing</h1>
+                <p>Modern boarding facilities designed for DSSC students with 24/7 security, study areas, and affordable rates.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Room Availability Section -->
+    <section id="rooms">
+        <div class="container">
+            <h2 class="section-title">Room Availability Overview</h2>
+            <div class="rooms-container">
+                <div class="room-card" data-type="single-study" data-price="3500">
+                    <div class="room-image">
+                        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Single Study Room">
+                    </div>
+                    <div class="room-details">
+                        <h3 class="room-type">Single Study Room</h3>
+                        <p class="room-availability">3 Available</p>
+                        <p class="room-price">P3,500/month</p>
+                    </div>
+                </div>
+                <div class="room-card" data-type="twin-sharing" data-price="2800">
+                    <div class="room-image">
+                        <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Twin Sharing Room">
+                    </div>
+                    <div class="room-details">
+                        <h3 class="room-type">Twin Sharing Room</h3>
+                        <p class="room-availability">8 Available</p>
+                        <p class="room-price">P2,800/month</p>
+                    </div>
+                </div>
+                <div class="room-card" data-type="quad-dorm" data-price="1300">
+                    <div class="room-image">
+                        <img src="https://res.cloudinary.com/dcrqjcct4/image/upload/v1758302336/1758299967931_rdq70f.jpg" alt="Quad Dorm Room">
+                    </div>
+                    <div class="room-details">
+                        <h3 class="room-type">Quad Dorm Room</h3>
+                        <p class="room-availability">5 Available</p>
+                        <p class="room-price">P1,300/month</p>
+                    </div>
+                </div>
+                <div class="room-card" data-type="premium-studio" data-price="4500">
+                    <div class="room-image">
+                        <img src="https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Premium Studio Room">
+                    </div>
+                    <div class="room-details">
+                        <h3 class="room-type">Premium Studio Room</h3>
+                        <p class="room-availability">2 Available</p>
+                        <p class="room-price">P4,500/month</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Room Details Modal -->
+    <div class="modal" id="room-details-modal" tabindex="-1" role="dialog" aria-labelledby="room-details-title">
+        <div class="modal-content">
+            <span class="close" aria-label="Close modal">&times;</span>
+            <h2 id="room-details-title">Room Details</h2>
+            <div class="room-details-content">
+                <p id="room-details-description"></p>
+                <div class="room-amenities">
+                    <h4>Amenities:</h4>
+                    <ul id="room-details-amenities"></ul>
+                </div>
+                <p id="room-details-price"></p>
+                <p id="room-details-availability"></p>
+                <p id="login-to-book" class="login-to-book">Please <a href="#" id="login-to-book-link">log in</a> to book a room.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rules Section -->
+    <section class="rules" id="rules">
+        <div class="container">
+            <h2 class="section-title">Boarding House Rules</h2>
+            <div class="rules-container">
+                <ul class="rules-list">
+                    <li>
+                        <div class="rule-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="rule-text">
+                            <h3>Curfew Hours</h3>
+                            <p>10:00 PM on weekdays, 11:00 PM on weekends</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="rule-icon">
+                            <i class="fas fa-ban"></i>
+                        </div>
+                        <div class="rule-text">
+                            <h3>Prohibited Items</h3>
+                            <p>No smoking, drinking, or illegal substances</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="rule-icon">
+                            <i class="fas fa-volume-mute"></i>
+                        </div>
+                        <div class="rule-text">
+                            <h3>Quiet Hours</h3>
+                            <p>Maintain quiet hours from 10:00 PM to 6:00 AM</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="rule-icon">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <div class="rule-text">
+                            <h3>ID Requirement</h3>
+                            <p>Valid DSSC ID required for entry</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Announcements Section -->
+    <section id="announcements">
+        <div class="container">
+            <h2 class="section-title">Latest Announcements</h2>
+            <div class="announcements-container">
+                <div class="announcement-card">
+                    <h3 class="announcement-title">Room Booking for SY 2024-2025 Now Open</h3>
+                    <p class="announcement-date">Posted 2 days ago</p>
+                    <p>Secure your spot for the next academic year. Book now to avoid disappointment.</p>
+                </div>
+                <div class="announcement-card">
+                    <h3 class="announcement-title">WiFi Upgrade Completed – Faster Internet</h3>
+                    <p class="announcement-date">Posted 1 week ago</p>
+                    <p>We've upgraded our internet infrastructure to provide faster and more reliable WiFi throughout the boarding house.</p>
+                </div>
+                <div class="announcement-card">
+                    <h3 class="announcement-title">New Study Areas Available 24/7</h3>
+                    <p class="announcement-date">Posted 2 weeks ago</p>
+                    <p>Newly renovated study areas are now available for students to use 24/7 during examination periods.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section class="location" id="location">
+        <div class="container">
+            <h2 class="section-title">Our Location</h2>
+            <p class="location-description">The DSSC Boarding House is conveniently located within the Davao del Sur State College main campus, providing easy access to academic buildings and campus facilities.</p>
+            <div class="map-container">
+                <iframe
+                    class="map-frame"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3962.0959417054464!2d125.3094087!3d6.758154299999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32f9b1a29b766ee7%3A0x72fbc8b024df6b7a!2sDavao%20del%20Sur%20State%20College%20Main%20Campus!5e0!3m2!1sen!2sph!5m2!1sen!2sph"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Information Section -->
+    <section class="contact-info-section" id="contact">
+        <div class="container">
+            <h2 class="section-title">Contact Information</h2>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3>Phone</h3>
+                    <p>(082) 555-0123</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email</h3>
+                    <p><a href="mailto:boarding@dssc.edu.ph">boarding@dssc.edu.ph</a></p>
+                </div>
+                <div class="contact-card" id="address-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Address</h3>
+                    <p>Davao del Sur State College Main Campus<br>Matti, Digos City<br>Davao del Sur, Philippines</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h2>DSSC Boarding House</h2>
+                        <p>Davao del Sur State College</p>
+                    </div>
+                </div>
+                <p class="footer-description">Providing comfortable and secure housing for DSSC students since 2010.</p>
+            </div>
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://mail.google.com" target="_blank"><i class="fab fa-google"></i></a>
+                </div>
+                <p>&copy; 2025 DSSC Boarding House. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Admin Login Modal -->
+    <div class="modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="admin-login-title">
+        <div class="modal-content">
+            <span class="close" aria-label="Close modal">&times;</span>
+            <h2 id="admin-login-title">Admin Login</h2>
+            <div id="login-notification" class="login-notification">
+                <span class="login-notification-message" id="login-notification-message"></span>
+                <button class="login-notification-close" id="login-notification-close">×</button>
+            </div>
+            <form id="modal-login-form">
+                <div class="form-group">
+                    <label for="admin-email">Email</label>
+                    <input type="email" id="admin-email" required placeholder="e.g., admin@dssc.edu.ph">
+                </div>
+                <div class="form-group password-group">
+                    <label for="admin-password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="admin-password" required placeholder="Enter your password">
+                        <span class="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group remember-me">
+                    <input type="checkbox" id="admin-remember-me">
+                    <label for="admin-remember-me">Remember Me</label>
+                </div>
+                <button type="submit" id="admin-login" class="login-submit">Login</button>
+                <p class="forgot-password"><a href="#">Forgot password?</a></p>
+                <p class="powered-by">Powered by JNRU</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Student Login Modal -->
+    <div class="modal" id="student-login-modal" tabindex="-1" role="dialog" aria-labelledby="student-login-title">
+        <div class="modal-content">
+            <span class="close" aria-label="Close modal">&times;</span>
+            <h2 id="student-login-title">Student Login</h2>
+            <div id="student-login-notification" class="login-notification">
+                <span class="login-notification-message" id="student-login-notification-message"></span>
+                <button class="login-notification-close" id="student-login-notification-close">×</button>
+            </div>
+            <form id="student-login-form">
+                <div class="form-group">
+                    <label for="student-email">Email</label>
+                    <input type="email" id="student-email" required placeholder="e.g., student1@dssc.edu.ph">
+                </div>
+                <div class="form-group password-group">
+                    <label for="student-password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="student-password" required placeholder="Enter your password">
+                        <span class="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group remember-me">
+                    <input type="checkbox" id="student-remember-me">
+                    <label for="student-remember-me">Remember Me</label>
+                </div>
+                <button type="submit" class="login-submit">Login</button>
+                <p class="forgot-password"><a href="#">Forgot password?</a></p>
+                <p class="powered-by">Powered by JNRU</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal" id="forgot-password-modal" tabindex="-1" role="dialog" aria-labelledby="forgot-password-title">
+        <div class="modal-content">
+            <span class="close" aria-label="Close modal">&times;</span>
+            <h2 id="forgot-password-title">Forgot Password</h2>
+            <div id="forgot-password-notification" class="login-notification" aria-live="polite">
+                <span class="login-notification-message" id="forgot-password-notification-message"></span>
+                <button class="login-notification-close" id="forgot-password-notification-close">×</button>
+            </div>
+            <form id="forgot-password-form">
+                <div class="form-group" id="student-id-group">
+                    <label for="forgot-student-id">Student ID</label>
+                    <div class="input-with-icon">
+                        <input type="text" id="forgot-student-id" required placeholder="e.g., DSSC-12345">
+                        <span class="see-sample" id="see-sample-link" title="See sample Certificate of Registration" aria-label="View sample Certificate of Registration">
+                            <i class="fas fa-info-circle"></i> See Sample
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group" id="email-group">
+                    <label for="forgot-email">Email</label>
+                    <input type="email" id="forgot-email" required placeholder="e.g., student@dssc.edu.ph">
+                </div>
+                <button type="submit" class="login-submit" id="forgot-submit-button">Submit</button>
+                <p class="sign-in"><a href="#" id="sign-in-link">Sign In</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sample COR Modal -->
+    <div class="modal" id="sample-picture-modal" tabindex="-1" role="dialog" aria-labelledby="cor-modal-title">
+        <div class="modal-content">
+            <span class="close" aria-label="Close modal">&times;</span>
+            <h2 id="cor-modal-title">Certificate of Registration (COR)</h2>
+            <div class="sample-image-container">
+                <img src="assets/images/placeholder-cor.png" alt="Certificate of Registration" class="sample-image" id="cor-image">
+                <p class="text-slate-600 mt-2 text-justify">
+                    Your Certificate of Registration (COR) confirms your enrollment and includes your name, student ID, program, year level, subjects, and schedules.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="Student/script.js"></script>
+</body>
+</html>
