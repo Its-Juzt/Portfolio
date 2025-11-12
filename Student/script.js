@@ -129,13 +129,13 @@ document.addEventListener('DOMContentLoaded', function() {
    if (studentLoginForm) {
     studentLoginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const email = document.getElementById('student-email').value.trim();
+        const email = document.getElementById('studPortfolioent-email').value.trim();
         const password = document.getElementById('student-password').value.trim();
         const user = {"name": "TEST", "username": "username"}
         
         if (user) {
             isLoggedIn = true;
-            window.location.href = 'Student/student.html';
+            window.location.href = '/Portfolio/Student/student.html';
 
             localStorage.setItem('currentUser', JSON.stringify({ name: user.name, email: user.username }));
             localStorage.setItem('justLoggedIn', 'true'); // Set flag for animation
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
             studentLoginForm.reset();
             setTimeout(() => {
                 studentLoginModal.style.display = 'none';
-                window.location.href = '/Student/student.html';
+                window.location.href = '/Portfolio/Student/student.html';
             }, 1000); // 1-second delay for notification
         } else {
             showNotification('student-', 'Invalid email or password.', true);
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification('', 'Admin login successful!');
                 adminLoginForm.reset();
                 loginModal.style.display = 'none';
-                window.location = "Admin/admin.html"
+                window.location = "/Portfolio/Admin/admin.html"
             } else {
                 showNotification('', 'Please enter both email and password.', true);
             }
