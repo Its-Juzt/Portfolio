@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (user) {
             isLoggedIn = true;
-            window.location.href = '/Student/student.html';
+            window.location.href = 'Student/student.html';
 
             localStorage.setItem('currentUser', JSON.stringify({ name: user.name, email: user.username }));
             localStorage.setItem('justLoggedIn', 'true'); // Set flag for animation
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification('', 'Admin login successful!');
                 adminLoginForm.reset();
                 loginModal.style.display = 'none';
-                window.location = "/Admin/admin.html"
+                window.location = "Admin/admin.html"
             } else {
                 showNotification('', 'Please enter both email and password.', true);
             }
